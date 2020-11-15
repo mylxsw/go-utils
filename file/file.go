@@ -19,9 +19,19 @@ type FS interface {
 	Exist(path string) bool
 	WriteFile(path string, data []byte) error
 	ReadFile(path string) ([]byte, error)
+	MkDir(path string) error
+	Delete(path string) error
 }
 
 type LocalFS struct{}
+
+func (l LocalFS) MkDir(path string) error {
+	return os.MkdirAll(path, os.ModePerm)
+}
+
+func (l LocalFS) Delete(path string) error {
+	return os.RemoveAll(path)
+}
 
 func (l LocalFS) Exist(path string) bool {
 	return Exist(path)
