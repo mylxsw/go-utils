@@ -15,18 +15,28 @@ func Exist(path string) bool {
 	return true
 }
 
-type FS interface {
-	Exist(path string) bool
-	WriteFile(path string, data []byte) error
-	ReadFile(path string) ([]byte, error)
-	MkDir(path string) error
-	Delete(path string) error
-}
-
 type LocalFS struct{}
 
 func (l LocalFS) MkDir(path string) error {
 	return os.MkdirAll(path, os.ModePerm)
+}
+
+func (l LocalFS) ListFiles(path string) ([]string, error) {
+	fileInfos, err := ioutil.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+
+	files := make([]string, 0)
+	for _, f := range fileInfos {
+		if f.IsDir() {
+			continue
+		}
+
+		files = append(files, f.Name())
+	}
+
+	return files, nil
 }
 
 func (l LocalFS) Delete(path string) error {

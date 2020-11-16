@@ -54,10 +54,19 @@ func HasPrefixes(val string, prefixes []string) bool {
 func Filter(items []string, filter func(item string) bool) []string {
 	res := make([]string, 0)
 	for _, item := range items {
-		item = strings.TrimSpace(item)
 		if filter(item) {
 			res = append(res, item)
 		}
+	}
+
+	return res
+}
+
+// Map 依次对字符串数组中每一个元素做 mapper 操作
+func Map(items []string, mapper func(item string) string) []string {
+	res := make([]string, 0)
+	for _, item := range items {
+		res = append(res, mapper(item))
 	}
 
 	return res

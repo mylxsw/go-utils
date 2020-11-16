@@ -1,6 +1,7 @@
 package diff_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/mylxsw/go-utils/assert"
@@ -16,4 +17,11 @@ func TestNewDiffer(t *testing.T) {
 -Are you ok?
 +What's your name?
 `, differ.Diff("s1", "Hello, world\nAre you ok?", "s2", "Hello, world\nWhat's your name?"))
+}
+
+func TestDiff_Clean(t *testing.T) {
+	differ := diff.NewDiffer(file.LocalFS{}, "/tmp", 0)
+	latest := differ.DiffLatest("default", "Hello, world")
+	_ = latest.PrintAndSave(os.Stdout)
+	_ = latest.Clean(2)
 }
