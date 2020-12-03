@@ -97,3 +97,15 @@ func Diff(itemsA []string, itemsB []string) []string {
 func Union(itemsA []string, itemsB []string) []string {
 	return Distinct(append(itemsA, itemsB...))
 }
+
+// Cutoff 字符串截取，如果截取了部分，后面自动追加 ...
+func Cutoff(maxLen int, val string) string {
+	valRune := []rune(strings.Trim(val, " \n"))
+
+	valLen := len(valRune)
+	if valLen <= maxLen {
+		return string(valRune)
+	}
+
+	return string(valRune[0:maxLen]) + "..."
+}

@@ -43,3 +43,9 @@ func TestUnion(t *testing.T) {
 	res := str.Union(itemsA, itemsB)
 	assert.Equal(t, 5, len(res))
 }
+
+func TestCutoff(t *testing.T) {
+	assert.Equal(t, "Hell...", str.Cutoff(4, "Hello, world"))
+	assert.Equal(t, "Hello, world", str.Cutoff(100, "Hello, world"))
+	assert.Equal(t, "Hello, world", str.Cutoff(len("Hello, world"), "Hello, world"))
+}
