@@ -24,6 +24,9 @@ func TestStringsContainPrefix(t *testing.T) {
 	s1 := "Hello, world"
 	assert.True(t, str.HasPrefixes(s1, []string{"xxxx", "yyyy", "Hell"}))
 	assert.False(t, str.HasPrefixes(s1, []string{"xxxx", "yyyy", "oops"}))
+
+	assert.True(t, str.HasSuffixes(s1, []string{"ld"}))
+	assert.False(t, str.HasSuffixes(s1, []string{"ld1"}))
 }
 
 func TestStringDiff(t *testing.T) {

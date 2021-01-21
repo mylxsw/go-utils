@@ -50,6 +50,17 @@ func HasPrefixes(val string, prefixes []string) bool {
 	return false
 }
 
+// HasSuffixes 判断字符串是否以指定的后缀结束
+func HasSuffixes(val string, suffixes []string) bool {
+	for _, suffix := range suffixes {
+		if strings.HasSuffix(val, suffix) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Filter 字符串数组过滤
 func Filter(items []string, filter func(item string) bool) []string {
 	res := make([]string, 0)
