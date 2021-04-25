@@ -61,6 +61,13 @@ func HasSuffixes(val string, suffixes []string) bool {
 	return false
 }
 
+// Exclude exclude all items match excepts
+func Exclude(items []string, excepts ...string) []string {
+	return Filter(items, func(item string) bool {
+		return !In(item, excepts)
+	})
+}
+
 // Filter 字符串数组过滤
 func Filter(items []string, filter func(item string) bool) []string {
 	res := make([]string, 0)

@@ -52,3 +52,9 @@ func TestCutoff(t *testing.T) {
 	assert.Equal(t, "Hello, world", str.Cutoff(100, "Hello, world"))
 	assert.Equal(t, "Hello, world", str.Cutoff(len("Hello, world"), "Hello, world"))
 }
+
+func TestExclude(t *testing.T) {
+	data := []string{"aaa", "bbb", "ccc"}
+	assert.True(t, len(str.Exclude(data, "ccc")) == 2)
+	assert.True(t, len(str.Exclude(data, "ccc", "ddd", "bbb")) == 1)
+}
