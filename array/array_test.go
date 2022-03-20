@@ -1,16 +1,16 @@
-package general_test
+package array_test
 
 import (
 	"fmt"
 	"testing"
 
+	"github.com/mylxsw/go-utils/array"
 	"github.com/mylxsw/go-utils/assert"
-	"github.com/mylxsw/go-utils/general"
 )
 
 func TestDistinct(t *testing.T) {
 	data := []string{"abc", "def", "124", "abc"}
-	assert.Equal(t, 3, len(general.Distinct(
+	assert.Equal(t, 3, len(array.Distinct(
 		data)))
 }
 
@@ -20,7 +20,7 @@ func TestMap(t *testing.T) {
 	}
 
 	data := []string{"abc", "def", "oops"}
-	for i, item := range general.Map(data, func(item string) Data { return Data{Value: item} }) {
+	for i, item := range array.Map(data, func(item string) Data { return Data{Value: item} }) {
 		assert.EqualValues(t, data[i], item.Value)
 	}
 }
@@ -28,12 +28,12 @@ func TestMap(t *testing.T) {
 func TestReduce(t *testing.T) {
 	{
 		data := []int{1, 2, 3, 4, 5, 6, 7}
-		assert.EqualValues(t, 28, general.Reduce(data, func(carry int, item int) int { return carry + item }, 0))
+		assert.EqualValues(t, 28, array.Reduce(data, func(carry int, item int) int { return carry + item }, 0))
 	}
 
 	{
 		data := []string{"abc", "def", "oops"}
-		assert.EqualValues(t, 10, general.Reduce(data, func(carry int, item string) int {
+		assert.EqualValues(t, 10, array.Reduce(data, func(carry int, item string) int {
 			return carry + len(item)
 		}, 0))
 	}
@@ -53,7 +53,7 @@ func TestGroupBy(t *testing.T) {
 		{Value: "tux", Category: "random"},
 	}
 
-	result := general.GroupBy(data, func(item Data) string { return item.Category })
+	result := array.GroupBy(data, func(item Data) string { return item.Category })
 	assert.Equal(t, 2, len(result))
 }
 
@@ -61,9 +61,9 @@ func TestEach(t *testing.T) {
 	data := []string{"abc", "def", "oops"}
 
 	count := 0
-	general.Each(data, func(item string) {
+	array.Each(data, func(item string) {
 		count++
-		assert.Equal(t, true, general.In(item, data))
+		assert.Equal(t, true, array.In(item, data))
 	})
 
 	assert.Equal(t, len(data), count)
@@ -71,10 +71,10 @@ func TestEach(t *testing.T) {
 
 func TestSort(t *testing.T) {
 	data := []int{1, 5, 6, 63, 12, 0, 99, 184, 23}
-	assert.EqualValues(t, "[184 99 63 23 12 6 5 1 0]", fmt.Sprintf("%v", general.Sort(data, func(item1, item2 int) bool { return item1 > item2 })))
+	assert.EqualValues(t, "[184 99 63 23 12 6 5 1 0]", fmt.Sprintf("%v", array.Sort(data, func(item1, item2 int) bool { return item1 > item2 })))
 }
 
 func TestReverse(t *testing.T) {
 	data := []int{1, 2, 3, 4}
-	assert.EqualValues(t, "[4 3 2 1]", fmt.Sprintf("%v", general.Reverse(data)))
+	assert.EqualValues(t, "[4 3 2 1]", fmt.Sprintf("%v", array.Reverse(data)))
 }
