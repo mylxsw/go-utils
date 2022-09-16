@@ -14,6 +14,25 @@ func TestDistinct(t *testing.T) {
 		data)))
 }
 
+func TestAnyIn(t *testing.T) {
+	data := []string{"abc", "def", "124", "abc"}
+	assert.Equal(t, true, array.AnyIn([]string{"abc", "dx"}, data))
+}
+
+func TestIntersect(t *testing.T) {
+	data1 := []string{"abc", "def", "123", "#85"}
+	data2 := []string{"#86", "#85", "abc", "xxx", "yyy"}
+
+	assert.EqualValues(t, "[#85 abc]", fmt.Sprintf("%v", array.Intersect(data1, data2)))
+}
+
+func TestDifferrnce(t *testing.T) {
+	data1 := []string{"abc", "def", "123", "#85", "123"}
+	data2 := []string{"#86", "#85", "abc", "xxx", "yyy"}
+
+	assert.EqualValues(t, "[def 123]", fmt.Sprintf("%v", array.Difference(data1, data2)))
+}
+
 func TestMap(t *testing.T) {
 	type Data struct {
 		Value string

@@ -28,6 +28,55 @@ func In[T comparable](val T, items []T) bool {
 	return false
 }
 
+// AnyIn 判断 vals 中的任意元素是否在 items 中
+func AnyIn[T comparable](vals []T, items []T) bool {
+	for _, val := range vals {
+		if In(val, items) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// Intersect 两个数组取交集
+func Intersect[T comparable](arr1 []T, arr2 []T) []T {
+	tm1 := make(map[T]bool)
+	for _, a1 := range arr1 {
+		if _, ok := tm1[a1]; !ok {
+			tm1[a1] = true
+		}
+	}
+
+	res := make([]T, 0)
+	for _, a2 := range arr2 {
+		if _, ok := tm1[a2]; ok {
+			res = append(res, a2)
+		}
+	}
+
+	return res
+}
+
+// Difference 取数据 a 和 b 的差集（返回在数据 a 中，但是不在 b 中的元素）
+func Difference[T comparable](a, b []T) []T {
+	bm1 := make(map[T]bool)
+	for _, b1 := range b {
+		if _, ok := bm1[b1]; !ok {
+			bm1[b1] = true
+		}
+	}
+
+	res := make([]T, 0)
+	for _, a1 := range a {
+		if _, ok := bm1[a1]; !ok {
+			res = append(res, a1)
+		}
+	}
+
+	return Distinct(res)
+}
+
 // Exclude exclude all items match excepts
 func Exclude[T comparable](items []T, excepts ...T) []T {
 	return Filter(items, func(item T) bool {
@@ -59,16 +108,7 @@ func Map[T interface{}, K interface{}](items []T, mapper func(item T) K) []K {
 
 // Diff 提取 itemsA 中包含，但是 itemsB 中不存在的元素
 func Diff[T comparable](itemsA []T, itemsB []T) []T {
-	res := make([]T, 0)
-	for _, item := range itemsA {
-		if In(item, itemsB) {
-			continue
-		}
-
-		res = append(res, item)
-	}
-
-	return res
+	return Difference(itemsA, itemsB)
 }
 
 // Union 两个字符串数组合并，去重复
