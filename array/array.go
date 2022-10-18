@@ -85,7 +85,7 @@ func Exclude[T comparable](items []T, excepts ...T) []T {
 }
 
 // Filter 字符串数组过滤
-func Filter[T comparable](items []T, filter func(item T) bool) []T {
+func Filter[T interface{}](items []T, filter func(item T) bool) []T {
 	res := make([]T, 0)
 	for _, item := range items {
 		if filter(item) {

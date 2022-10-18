@@ -14,6 +14,23 @@ func TestDistinct(t *testing.T) {
 		data)))
 }
 
+func TestFilter(t *testing.T) {
+	data := []int{1, 2, 3, 4, 5, 6, 7}
+	assert.EqualValues(t, "[2 4 6]", fmt.Sprintf("%v", array.Filter(data, func(item int) bool { return item%2 == 0 })))
+
+	type Data struct {
+		Value string
+	}
+
+	data2 := []Data{
+		{Value: "abc"},
+		{Value: "def"},
+		{Value: "vja"},
+	}
+
+	assert.EqualValues(t, "[{abc} {vja}]", fmt.Sprintf("%v", array.Filter(data2, func(item Data) bool { return item.Value == "abc" || item.Value == "vja" })))
+}
+
 func TestAnyIn(t *testing.T) {
 	data := []string{"abc", "def", "124", "abc"}
 	assert.Equal(t, true, array.AnyIn([]string{"abc", "dx"}, data))
