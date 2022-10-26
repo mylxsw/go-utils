@@ -8,6 +8,37 @@ import (
 	"github.com/mylxsw/go-utils/assert"
 )
 
+type Data struct {
+	Key   string
+	Value string
+}
+
+func TestToMap(t *testing.T) {
+	data := []Data{
+		{Key: "abc", Value: "123"},
+		{Key: "def", Value: "456"},
+		{Key: "vja", Value: "789"},
+		{Key: "lmn", Value: "101"},
+	}
+
+	dataMap := array.ToMap(data, func(dat Data) string { return dat.Key })
+	assert.Equal(t, 4, len(dataMap))
+	assert.Equal(t, "123", dataMap["abc"].Value)
+	assert.Equal(t, "101", dataMap["lmn"].Value)
+}
+
+func TestFromMap(t *testing.T) {
+	data := map[string]Data{
+		"abc": {Key: "abc", Value: "123"},
+		"def": {Key: "def", Value: "456"},
+		"vja": {Key: "vja", Value: "789"},
+		"lmn": {Key: "lmn", Value: "101"},
+	}
+
+	dataArray := array.FromMap(data)
+	assert.Equal(t, 4, len(dataArray))
+}
+
 func TestDistinct(t *testing.T) {
 	data := []string{"abc", "def", "124", "abc"}
 	assert.Equal(t, 3, len(array.Distinct(

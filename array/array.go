@@ -2,6 +2,26 @@ package array
 
 import "sort"
 
+// ToMap 将数组转换为 map
+func ToMap[T any, K comparable](input []T, keyFunc func(T) K) map[K]T {
+	m := make(map[K]T)
+	for _, val := range input {
+		m[keyFunc(val)] = val
+	}
+
+	return m
+}
+
+// FromMap 从 map 中提取数组
+func FromMap[T any, K comparable](input map[K]T) []T {
+	output := make([]T, 0, len(input))
+	for _, val := range input {
+		output = append(output, val)
+	}
+
+	return output
+}
+
 // Distinct remove duplicate elements from array
 func Distinct[K comparable](input []K) []K {
 	u := make([]K, 0, len(input))
