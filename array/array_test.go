@@ -37,6 +37,9 @@ func TestFromMap(t *testing.T) {
 
 	dataArray := array.FromMap(data)
 	assert.Equal(t, 4, len(dataArray))
+
+	keyArray := array.FromMapKeys(data)
+	assert.Equal(t, 4, len(keyArray))
 }
 
 func TestDistinct(t *testing.T) {

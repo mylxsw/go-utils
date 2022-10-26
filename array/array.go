@@ -12,6 +12,16 @@ func ToMap[T any, K comparable](input []T, keyFunc func(T) K) map[K]T {
 	return m
 }
 
+// FromMapKeys 将 map 的 key 转换为数组
+func FromMapKeys[T any, K comparable](input map[K]T) []K {
+	keys := make([]K, 0, len(input))
+	for key := range input {
+		keys = append(keys, key)
+	}
+
+	return keys
+}
+
 // FromMap 从 map 中提取数组
 func FromMap[T any, K comparable](input map[K]T) []T {
 	output := make([]T, 0, len(input))
