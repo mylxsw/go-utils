@@ -13,6 +13,14 @@ type Data struct {
 	Value string
 }
 
+func TestRepeat(t *testing.T) {
+	data := array.Repeat(1, 10)
+	assert.Equal(t, 10, len(data))
+	assert.Equal(t, 1, data[0])
+	assert.Equal(t, 1, data[5])
+	assert.Equal(t, 1, data[9])
+}
+
 func TestToMap(t *testing.T) {
 	data := []Data{
 		{Key: "abc", Value: "123"},

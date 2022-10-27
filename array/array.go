@@ -2,6 +2,24 @@ package array
 
 import "sort"
 
+// Repeat 生成 count 个包含 item 值的数组
+func Repeat[T any](item T, count int) []T {
+	result := make([]T, count)
+	for i := 0; i < count; i++ {
+		result[i] = item
+	}
+	return result
+}
+
+// RepeatFunc 重复执行 count 次 fn，返回结果为数组
+func RepeatFunc[T any](fn func() T, count int) []T {
+	result := make([]T, count)
+	for i := 0; i < count; i++ {
+		result[i] = fn()
+	}
+	return result
+}
+
 // ToMap 将数组转换为 map
 func ToMap[T any, K comparable](input []T, keyFunc func(T) K) map[K]T {
 	m := make(map[K]T)
