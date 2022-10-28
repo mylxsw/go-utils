@@ -21,6 +21,20 @@ func TestRepeat(t *testing.T) {
 	assert.Equal(t, 1, data[9])
 }
 
+func TestBuildMap(t *testing.T) {
+	data := []Data{
+		{Key: "abc", Value: "123"},
+		{Key: "def", Value: "456"},
+		{Key: "vja", Value: "789"},
+		{Key: "lmn", Value: "101"},
+	}
+
+	res := array.BuildMap(data, func(item Data) (string, string) { return item.Key + item.Value, item.Value })
+	assert.Equal(t, 4, len(res))
+	assert.Equal(t, "123", res["abc123"])
+	assert.Equal(t, "101", res["lmn101"])
+}
+
 func TestToMap(t *testing.T) {
 	data := []Data{
 		{Key: "abc", Value: "123"},

@@ -20,6 +20,17 @@ func RepeatFunc[T any](fn func() T, count int) []T {
 	return result
 }
 
+// BuildMap 遍历 input 数组，使用 mapBuilder 函数（返回值为 Key, Value）创建 map
+func BuildMap[T any, M any, K comparable](input []T, mapBuilder func(T) (K, M)) map[K]M {
+	result := make(map[K]M)
+	for _, item := range input {
+		key, value := mapBuilder(item)
+		result[key] = value
+	}
+
+	return result
+}
+
 // ToMap 将数组转换为 map
 func ToMap[T any, K comparable](input []T, keyFunc func(T) K) map[K]T {
 	m := make(map[K]T)
