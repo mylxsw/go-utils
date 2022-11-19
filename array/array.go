@@ -155,11 +155,33 @@ func Filter[T interface{}](items []T, filter func(item T) bool) []T {
 	return res
 }
 
+// Filter 字符串数组过滤
+func FilterWithIndex[T interface{}](items []T, filter func(item T, index int) bool) []T {
+	res := make([]T, 0)
+	for index, item := range items {
+		if filter(item, index) {
+			res = append(res, item)
+		}
+	}
+
+	return res
+}
+
 // Map 依次对每一个元素做 mapper 操作
 func Map[T interface{}, K interface{}](items []T, mapper func(item T) K) []K {
 	res := make([]K, 0)
 	for _, item := range items {
 		res = append(res, mapper(item))
+	}
+
+	return res
+}
+
+// Map 依次对每一个元素做 mapper 操作
+func MapWithIndex[T interface{}, K interface{}](item []T, mapper func(item T, index int) K) []K {
+	res := make([]K, 0)
+	for index, item := range item {
+		res = append(res, mapper(item, index))
 	}
 
 	return res
