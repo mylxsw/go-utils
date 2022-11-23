@@ -82,9 +82,9 @@ func Filter(items []string, filter func(item string) bool) []string {
 
 // Map 依次对字符串数组中每一个元素做 mapper 操作
 func Map(items []string, mapper func(item string) string) []string {
-	res := make([]string, 0)
-	for _, item := range items {
-		res = append(res, mapper(item))
+	res := make([]string, len(items))
+	for i, item := range items {
+		res[i] = mapper(item)
 	}
 
 	return res

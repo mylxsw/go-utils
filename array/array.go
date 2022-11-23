@@ -144,10 +144,10 @@ func Exclude[T comparable](items []T, excepts ...T) []T {
 }
 
 // Filter 字符串数组过滤
-func Filter[T interface{}](items []T, filter func(item T) bool) []T {
+func Filter[T interface{}](items []T, predicate func(item T) bool) []T {
 	res := make([]T, 0)
 	for _, item := range items {
-		if filter(item) {
+		if predicate(item) {
 			res = append(res, item)
 		}
 	}
@@ -169,19 +169,19 @@ func FilterWithIndex[T interface{}](items []T, filter func(item T, index int) bo
 
 // Map 依次对每一个元素做 mapper 操作
 func Map[T interface{}, K interface{}](items []T, mapper func(item T) K) []K {
-	res := make([]K, 0)
-	for _, item := range items {
-		res = append(res, mapper(item))
+	res := make([]K, len(items))
+	for i, item := range items {
+		res[i] = mapper(item)
 	}
 
 	return res
 }
 
 // Map 依次对每一个元素做 mapper 操作
-func MapWithIndex[T interface{}, K interface{}](item []T, mapper func(item T, index int) K) []K {
-	res := make([]K, 0)
-	for index, item := range item {
-		res = append(res, mapper(item, index))
+func MapWithIndex[T interface{}, K interface{}](items []T, mapper func(item T, index int) K) []K {
+	res := make([]K, len(items))
+	for i, item := range items {
+		res[i] = mapper(item, i)
 	}
 
 	return res
@@ -206,6 +206,15 @@ func Reduce[T interface{}, K interface{}](data []K, cb func(carry T, item K) T, 
 	return initValue
 }
 
+// ReduceWithIndex 对数组执行 reduce 操作
+func ReduceWithIndex[T interface{}, K interface{}](data []K, cb func(carry T, item K, index int) T, initValue T) T {
+	for index, dat := range data {
+		initValue = cb(initValue, dat, index)
+	}
+
+	return initValue
+}
+
 // GroupBy 按照数组的某个值进行分组
 func GroupBy[T interface{}, K comparable](data []T, cb func(item T) K) map[K][]T {
 	results := make(map[K][]T)
@@ -225,6 +234,13 @@ func GroupBy[T interface{}, K comparable](data []T, cb func(item T) K) map[K][]T
 func Each[T interface{}](data []T, cb func(item T)) {
 	for _, dat := range data {
 		cb(dat)
+	}
+}
+
+// EachWithIndex 遍历data，依次执行 cb 函数
+func EachWithIndex[T interface{}](data []T, cb func(item T, index int)) {
+	for index, dat := range data {
+		cb(dat, index)
 	}
 }
 
