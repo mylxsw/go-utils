@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mylxsw/coll"
+	"github.com/mylxsw/go-utils/array"
 	"github.com/pmezard/go-difflib/difflib"
 )
 
@@ -96,24 +96,25 @@ func (ds Differ) DiffLatest(name string, targetStr string) Diff {
 				return err
 			}
 
-			var tss []string
-			_ = coll.MustNew(files).Filter(func(item string) bool {
-				return fileMatchRegexp.MatchString(item)
-			}).Map(func(item string) string {
-				return strings.Split(item, ".")[1]
-			}).All(&tss)
+			tss := array.Map(
+				array.Filter(files, func(file string) bool { return fileMatchRegexp.MatchString(file) }),
+				func(file string) string {
+					return strings.Split(file, ".")[1]
+				},
+			)
 
 			sort.Strings(tss)
 			if len(tss) <= int(keepOnly)+1 {
 				return nil
 			}
 
-			coll.MustNew(tss[:len(tss)-int(keepOnly)-1]).Map(func(ts string) string {
-				return filepath.Join(ds.dataDir, fmt.Sprintf("%s.%s.stat", name, ts))
-			}).Each(func(targetFile string) {
-				_ = ds.fs.Delete(targetFile)
-				_ = ds.fs.Delete(targetFile + ".diff")
-			})
+			array.Each(
+				array.Map(tss[:len(tss)-int(keepOnly)-1], func(ts string) string { return filepath.Join(ds.dataDir, fmt.Sprintf("%s.%s.stat", name, ts)) }),
+				func(targetFile string) {
+					_ = ds.fs.Delete(targetFile)
+					_ = ds.fs.Delete(targetFile + ".diff")
+				},
+			)
 
 			return nil
 		},
