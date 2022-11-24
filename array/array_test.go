@@ -186,3 +186,14 @@ func TestChunksEach(t *testing.T) {
 
 	assert.Equal(t, 3, count)
 }
+
+func TestShuffle(t *testing.T) {
+	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	fmt.Println(array.Shuffle(data))
+	fmt.Println(array.Shuffle(data))
+	fmt.Println(array.Shuffle(data))
+	fmt.Println(array.Shuffle(data))
+	fmt.Println(data)
+
+	assert.EqualValues(t, 10, len(array.Shuffle(data)))
+}

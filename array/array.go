@@ -1,6 +1,9 @@
 package array
 
-import "sort"
+import (
+	"math/rand"
+	"sort"
+)
 
 // Repeat 生成 count 个包含 item 值的数组
 func Repeat[T any](item T, count int) []T {
@@ -59,6 +62,11 @@ func FromMap[T any, K comparable](input map[K]T) []T {
 	}
 
 	return output
+}
+
+// Uniq remove duplicate elements from array
+func Uniq[K comparable](input []K) []K {
+	return Distinct(input)
 }
 
 // Distinct remove duplicate elements from array
@@ -310,4 +318,14 @@ func ChunksEach[T any](data []T, size int, cb func(items []T)) {
 
 		cb(data[i:end])
 	}
+}
+
+// Shuffle 随机打乱数组，使用前请注意需要使用 rand.Seed(time.Now().UnixNano()) 方法来初始化随机数种子
+func Shuffle[T any](data []T) []T {
+
+	res := make([]T, len(data))
+	copy(res, data)
+	rand.Shuffle(len(data), func(i, j int) { res[i], res[j] = res[j], res[i] })
+
+	return res
 }
