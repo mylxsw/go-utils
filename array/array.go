@@ -144,7 +144,7 @@ func Exclude[T comparable](items []T, excepts ...T) []T {
 }
 
 // Filter 字符串数组过滤
-func Filter[T interface{}](items []T, predicate func(item T) bool) []T {
+func Filter[T any](items []T, predicate func(item T) bool) []T {
 	res := make([]T, 0)
 	for _, item := range items {
 		if predicate(item) {
@@ -156,7 +156,7 @@ func Filter[T interface{}](items []T, predicate func(item T) bool) []T {
 }
 
 // Filter 字符串数组过滤
-func FilterWithIndex[T interface{}](items []T, filter func(item T, index int) bool) []T {
+func FilterWithIndex[T any](items []T, filter func(item T, index int) bool) []T {
 	res := make([]T, 0)
 	for index, item := range items {
 		if filter(item, index) {
@@ -168,7 +168,7 @@ func FilterWithIndex[T interface{}](items []T, filter func(item T, index int) bo
 }
 
 // Map 依次对每一个元素做 mapper 操作
-func Map[T interface{}, K interface{}](items []T, mapper func(item T) K) []K {
+func Map[T any, K any](items []T, mapper func(item T) K) []K {
 	res := make([]K, len(items))
 	for i, item := range items {
 		res[i] = mapper(item)
@@ -178,7 +178,7 @@ func Map[T interface{}, K interface{}](items []T, mapper func(item T) K) []K {
 }
 
 // Map 依次对每一个元素做 mapper 操作
-func MapWithIndex[T interface{}, K interface{}](items []T, mapper func(item T, index int) K) []K {
+func MapWithIndex[T any, K any](items []T, mapper func(item T, index int) K) []K {
 	res := make([]K, len(items))
 	for i, item := range items {
 		res[i] = mapper(item, i)
@@ -198,7 +198,7 @@ func Union[T comparable](itemsA []T, itemsB []T) []T {
 }
 
 // Reduce 对数组执行 reduce 操作
-func Reduce[T interface{}, K interface{}](data []K, cb func(carry T, item K) T, initValue T) T {
+func Reduce[T any, K any](data []K, cb func(carry T, item K) T, initValue T) T {
 	for _, dat := range data {
 		initValue = cb(initValue, dat)
 	}
@@ -207,7 +207,7 @@ func Reduce[T interface{}, K interface{}](data []K, cb func(carry T, item K) T, 
 }
 
 // ReduceWithIndex 对数组执行 reduce 操作
-func ReduceWithIndex[T interface{}, K interface{}](data []K, cb func(carry T, item K, index int) T, initValue T) T {
+func ReduceWithIndex[T any, K any](data []K, cb func(carry T, item K, index int) T, initValue T) T {
 	for index, dat := range data {
 		initValue = cb(initValue, dat, index)
 	}
@@ -216,7 +216,7 @@ func ReduceWithIndex[T interface{}, K interface{}](data []K, cb func(carry T, it
 }
 
 // GroupBy 按照数组的某个值进行分组
-func GroupBy[T interface{}, K comparable](data []T, cb func(item T) K) map[K][]T {
+func GroupBy[T any, K comparable](data []T, cb func(item T) K) map[K][]T {
 	results := make(map[K][]T)
 	for _, dat := range data {
 		k := cb(dat)
@@ -231,23 +231,23 @@ func GroupBy[T interface{}, K comparable](data []T, cb func(item T) K) map[K][]T
 }
 
 // Each 遍历data，依次执行 cb 函数
-func Each[T interface{}](data []T, cb func(item T)) {
+func Each[T any](data []T, cb func(item T)) {
 	for _, dat := range data {
 		cb(dat)
 	}
 }
 
 // EachWithIndex 遍历data，依次执行 cb 函数
-func EachWithIndex[T interface{}](data []T, cb func(item T, index int)) {
+func EachWithIndex[T any](data []T, cb func(item T, index int)) {
 	for index, dat := range data {
 		cb(dat, index)
 	}
 }
 
 // Sort 对数组进行排序
-func Sort[T interface{}](data []T, cb func(item1 T, item2 T) bool) []T {
+func Sort[T any](data []T, cb func(item1 T, item2 T) bool) []T {
 	results := Map(data, func(item T) sortStruct {
-		return sortStruct{Value: item, Compare: func(v1, v2 interface{}) bool {
+		return sortStruct{Value: item, Compare: func(v1, v2 any) bool {
 			return cb(v1.(T), v2.(T))
 		}}
 	})
@@ -257,8 +257,8 @@ func Sort[T interface{}](data []T, cb func(item1 T, item2 T) bool) []T {
 }
 
 type sortStruct struct {
-	Compare func(v1, v2 interface{}) bool
-	Value   interface{}
+	Compare func(v1, v2 any) bool
+	Value   any
 }
 
 type sortStructs []sortStruct
@@ -276,11 +276,38 @@ func (s sortStructs) Swap(i, j int) {
 }
 
 // Reverse 数组逆序
-func Reverse[T interface{}](data []T) []T {
+func Reverse[T any](data []T) []T {
 	length := len(data)
 	for i := 0; i < length/2; i++ {
 		data[length-1-i], data[i] = data[i], data[length-1-i]
 	}
 
 	return data
+}
+
+// Chunks 将数组分割成多个指定长度的数组
+func Chunks[T any](data []T, size int) [][]T {
+	var result [][]T
+	for i := 0; i < len(data); i += size {
+		end := i + size
+		if end > len(data) {
+			end = len(data)
+		}
+
+		result = append(result, data[i:end])
+	}
+
+	return result
+}
+
+// ChunksEach 将数组分割成多个指定长度的数组，依次执行 cb 函数
+func ChunksEach[T any](data []T, size int, cb func(items []T)) {
+	for i := 0; i < len(data); i += size {
+		end := i + size
+		if end > len(data) {
+			end = len(data)
+		}
+
+		cb(data[i:end])
+	}
 }

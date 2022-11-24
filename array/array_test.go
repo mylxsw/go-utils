@@ -170,3 +170,19 @@ func TestReverse(t *testing.T) {
 	data := []int{1, 2, 3, 4}
 	assert.EqualValues(t, "[4 3 2 1]", fmt.Sprintf("%v", array.Reverse(data)))
 }
+
+func TestChunks(t *testing.T) {
+	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	assert.EqualValues(t, "[[1 2 3 4] [5 6 7 8] [9 10]]", fmt.Sprintf("%v", array.Chunks(data, 4)))
+}
+
+func TestChunksEach(t *testing.T) {
+	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	count := 0
+	array.ChunksEach(data, 4, func(chunk []int) {
+		count++
+		assert.True(t, len(chunk) <= 4)
+	})
+
+	assert.Equal(t, 3, count)
+}
