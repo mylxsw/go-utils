@@ -38,17 +38,7 @@ func Values[T any, K comparable](input map[K]T) []T {
 }
 
 // Map 依次对每一个元素做 mapper 操作
-func Map[T any, K comparable, V any](items map[K]V, mapper func(item V) T) map[K]T {
-	res := make(map[K]T, len(items))
-	for k, v := range items {
-		res[k] = mapper(v)
-	}
-
-	return res
-}
-
-// MapWithKey 依次对每一个元素做 mapper 操作
-func MapWithKey[T any, K comparable, V any](items map[K]V, mapper func(item V, key K) T) map[K]T {
+func Map[T any, K comparable, V any](items map[K]V, mapper func(item V, key K) T) map[K]T {
 	res := make(map[K]T, len(items))
 	for k, v := range items {
 		res[k] = mapper(v, k)
@@ -58,19 +48,7 @@ func MapWithKey[T any, K comparable, V any](items map[K]V, mapper func(item V, k
 }
 
 // Filter 对每一个元素做 filter 操作
-func Filter[K comparable, V any](items map[K]V, predicate func(item V) bool) map[K]V {
-	res := make(map[K]V, 0)
-	for k, v := range items {
-		if predicate(v) {
-			res[k] = v
-		}
-	}
-
-	return res
-}
-
-// Filter 对每一个元素做 filter 操作
-func FilterWithKey[K comparable, V any](items map[K]V, predicate func(item V, key K) bool) map[K]V {
+func Filter[K comparable, V any](items map[K]V, predicate func(item V, key K) bool) map[K]V {
 	res := make(map[K]V, 0)
 	for k, v := range items {
 		if predicate(v, k) {
@@ -82,14 +60,7 @@ func FilterWithKey[K comparable, V any](items map[K]V, predicate func(item V, ke
 }
 
 // Each 对每一个元素做 consumer 操作
-func Each[K comparable, V any](items map[K]V, consumer func(item V)) {
-	for _, v := range items {
-		consumer(v)
-	}
-}
-
-// EachWithKey 对每一个元素做 consumer 操作
-func EachWithKey[K comparable, V any](items map[K]V, consumer func(item V, key K)) {
+func Each[K comparable, V any](items map[K]V, consumer func(item V, key K)) {
 	for k, v := range items {
 		consumer(v, k)
 	}
@@ -103,15 +74,7 @@ type Ordered interface {
 }
 
 // OrderedEach 对每一个元素做 consumer 操作，对 Map 的 Key 进行排序后再遍历
-func OrderedEach[K Ordered, V any](items map[K]V, consumer func(item V)) {
-	sortedKeys := array.Sort(Keys(items), func(k1, k2 K) bool { return k1 < k2 })
-	for _, k := range sortedKeys {
-		consumer(items[k])
-	}
-}
-
-// OrderedEachWithKey 对每一个元素做 consumer 操作，对 Map 的 Key 进行排序后再遍历
-func OrderedEachWithKey[K Ordered, V any](items map[K]V, consumer func(item V, key K)) {
+func OrderedEach[K Ordered, V any](items map[K]V, consumer func(item V, key K)) {
 	sortedKeys := array.Sort(Keys(items), func(k1, k2 K) bool { return k1 < k2 })
 	for _, k := range sortedKeys {
 		consumer(items[k], k)
@@ -119,15 +82,7 @@ func OrderedEachWithKey[K Ordered, V any](items map[K]V, consumer func(item V, k
 }
 
 // OrderedEachBy 对每一个元素做 consumer 操作，对 Map 的 Key 进行排序后再遍历，通过 orderBy 指定排序规则
-func OrderedEachBy[K Ordered, V any](items map[K]V, consumer func(item V), orderBy func(k1, k2 K) bool) {
-	sortedKeys := array.Sort(Keys(items), orderBy)
-	for _, k := range sortedKeys {
-		consumer(items[k])
-	}
-}
-
-// OrderedEachWithKeyBy 对每一个元素做 consumer 操作，对 Map 的 Key 进行排序后再遍历，通过 orderBy 指定排序规则
-func OrderedEachWithKeyBy[K Ordered, V any](items map[K]V, consumer func(item V, key K), orderBy func(k1, k2 K) bool) {
+func OrderedEachBy[K Ordered, V any](items map[K]V, consumer func(item V, key K), orderBy func(k1, k2 K) bool) {
 	sortedKeys := array.Sort(Keys(items), orderBy)
 	for _, k := range sortedKeys {
 		consumer(items[k], k)
@@ -135,15 +90,7 @@ func OrderedEachWithKeyBy[K Ordered, V any](items map[K]V, consumer func(item V,
 }
 
 // OrderedEachByValue 对每一个元素做 consumer 操作，对 Map 的 Key 进行排序后再遍历，通过 orderBy 指定排序规则
-func OrderedEachByValue[K Ordered, V any](items map[K]V, consumer func(item V), orderBy func(v1, v2 V) bool) {
-	sortedKeys := array.Sort(Keys(items), func(k1, k2 K) bool { return orderBy(items[k1], items[k2]) })
-	for _, k := range sortedKeys {
-		consumer(items[k])
-	}
-}
-
-// OrderedEachWithKeyByValue 对每一个元素做 consumer 操作，对 Map 的 Key 进行排序后再遍历，通过 orderBy 指定排序规则
-func OrderedEachWithKeyByValue[K Ordered, V any](items map[K]V, consumer func(item V, key K), orderBy func(v1, v2 V) bool) {
+func OrderedEachByValue[K Ordered, V any](items map[K]V, consumer func(item V, key K), orderBy func(v1, v2 V) bool) {
 	sortedKeys := array.Sort(Keys(items), func(k1, k2 K) bool { return orderBy(items[k1], items[k2]) })
 	for _, k := range sortedKeys {
 		consumer(items[k], k)

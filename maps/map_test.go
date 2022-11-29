@@ -40,27 +40,7 @@ func TestMap(t *testing.T) {
 		"three": 3,
 	}
 
-	mapped := Map(m, func(item int) string {
-		return fmt.Sprintf("item-%d", item)
-	})
-
-	if len(mapped) != 3 {
-		t.Errorf("len(mapped) = %d, want 3", len(mapped))
-	}
-
-	assert.Equal(t, "item-1", mapped["one"])
-	assert.Equal(t, "item-2", mapped["two"])
-	assert.Equal(t, "item-3", mapped["three"])
-}
-
-func TestMapWithKey(t *testing.T) {
-	m := map[string]int{
-		"one":   1,
-		"two":   2,
-		"three": 3,
-	}
-
-	mapped := MapWithKey(m, func(item int, key string) string {
+	mapped := Map(m, func(item int, key string) string {
 		return fmt.Sprintf("item-%s-%d", key, item)
 	})
 
@@ -80,26 +60,7 @@ func TestFilter(t *testing.T) {
 		"three": 3,
 	}
 
-	filtered := Filter(m, func(item int) bool {
-		return item > 1
-	})
-
-	if len(filtered) != 2 {
-		t.Errorf("len(filtered) = %d, want 2", len(filtered))
-	}
-
-	assert.Equal(t, 2, filtered["two"])
-	assert.Equal(t, 3, filtered["three"])
-}
-
-func TestFilterWithKey(t *testing.T) {
-	m := map[string]int{
-		"one":   1,
-		"two":   2,
-		"three": 3,
-	}
-
-	filtered := FilterWithKey(m, func(item int, key string) bool {
+	filtered := Filter(m, func(item int, key string) bool {
 		return item > 1 && key != "three"
 	})
 
@@ -118,22 +79,7 @@ func TestEach(t *testing.T) {
 	}
 
 	var total int
-	Each(m, func(item int) {
-		total += item
-	})
-
-	assert.Equal(t, 6, total)
-}
-
-func TestEachWithKey(t *testing.T) {
-	m := map[string]int{
-		"one":   1,
-		"two":   2,
-		"three": 3,
-	}
-
-	var total int
-	EachWithKey(m, func(item int, key string) {
+	Each(m, func(item int, key string) {
 		total += item
 		assert.True(t, key == "one" || key == "two" || key == "three")
 	})
@@ -148,23 +94,9 @@ func TestOrderedEach(t *testing.T) {
 		"3-three": 3,
 	}
 
-	var lastValue int
-	OrderedEach(m, func(item int) {
-		assert.Equal(t, lastValue+1, item)
-		lastValue = item
-	})
-}
-
-func TestOrderedEachWithKey(t *testing.T) {
-	m := map[string]int{
-		"1-one":   1,
-		"2-two":   2,
-		"3-three": 3,
-	}
-
 	var lastValue, index int
 	keys := []string{"1-one", "2-two", "3-three"}
-	OrderedEachWithKey(m, func(item int, key string) {
+	OrderedEach(m, func(item int, key string) {
 		assert.Equal(t, lastValue+1, item)
 		assert.Equal(t, keys[index], key)
 		lastValue = item
@@ -183,28 +115,9 @@ func TestOrderedEachBy(t *testing.T) {
 		return k1 > k2
 	}
 
-	keys := []int{3, 2, 1}
-	var index int
-	OrderedEachBy(m, func(item int) {
-		assert.Equal(t, keys[index], item)
-		index++
-	}, orderBy)
-}
-
-func TestOrderedEachWithKeyBy(t *testing.T) {
-	m := map[string]int{
-		"1-one":   1,
-		"2-two":   2,
-		"3-three": 3,
-	}
-
-	var orderBy = func(k1, k2 string) bool {
-		return k1 > k2
-	}
-
 	keys := []string{"3-three", "2-two", "1-one"}
 	var index int
-	OrderedEachWithKeyBy(m, func(item int, key string) {
+	OrderedEachBy(m, func(item int, key string) {
 		assert.Equal(t, keys[index], key)
 		index++
 	}, orderBy)
@@ -221,28 +134,9 @@ func TestOrderedEachByValue(t *testing.T) {
 		return v1 > v2
 	}
 
-	keys := []int{3, 2, 1}
-	var index int
-	OrderedEachByValue(m, func(item int) {
-		assert.Equal(t, keys[index], item)
-		index++
-	}, orderBy)
-}
-
-func TestOrderedEachWithKeyByValue(t *testing.T) {
-	m := map[string]int{
-		"1-one":   1,
-		"2-two":   2,
-		"3-three": 3,
-	}
-
-	var orderBy = func(v1, v2 int) bool {
-		return v1 > v2
-	}
-
 	keys := []string{"3-three", "2-two", "1-one"}
 	var index int
-	OrderedEachWithKeyByValue(m, func(item int, key string) {
+	OrderedEachByValue(m, func(item int, key string) {
 		assert.Equal(t, keys[index], key)
 		index++
 	}, orderBy)

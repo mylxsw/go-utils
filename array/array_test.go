@@ -43,7 +43,7 @@ func TestToMap(t *testing.T) {
 		{Key: "lmn", Value: "101"},
 	}
 
-	dataMap := array.ToMap(data, func(dat Data) string { return dat.Key })
+	dataMap := array.ToMap(data, func(dat Data, i int) string { return dat.Key })
 	assert.Equal(t, 4, len(dataMap))
 	assert.Equal(t, "123", dataMap["abc"].Value)
 	assert.Equal(t, "101", dataMap["lmn"].Value)
@@ -72,7 +72,7 @@ func TestDistinct(t *testing.T) {
 
 func TestFilter(t *testing.T) {
 	data := []int{1, 2, 3, 4, 5, 6, 7}
-	assert.EqualValues(t, "[2 4 6]", fmt.Sprintf("%v", array.Filter(data, func(item int) bool { return item%2 == 0 })))
+	assert.EqualValues(t, "[2 4 6]", fmt.Sprintf("%v", array.Filter(data, func(item int, i int) bool { return item%2 == 0 })))
 
 	type Data struct {
 		Value string
@@ -84,7 +84,7 @@ func TestFilter(t *testing.T) {
 		{Value: "vja"},
 	}
 
-	assert.EqualValues(t, "[{abc} {vja}]", fmt.Sprintf("%v", array.Filter(data2, func(item Data) bool { return item.Value == "abc" || item.Value == "vja" })))
+	assert.EqualValues(t, "[{abc} {vja}]", fmt.Sprintf("%v", array.Filter(data2, func(item Data, i int) bool { return item.Value == "abc" || item.Value == "vja" })))
 }
 
 func TestAnyIn(t *testing.T) {
@@ -153,7 +153,7 @@ func TestEach(t *testing.T) {
 	data := []string{"abc", "def", "oops"}
 
 	count := 0
-	array.Each(data, func(item string) {
+	array.Each(data, func(item string, i int) {
 		count++
 		assert.Equal(t, true, array.In(item, data))
 	})

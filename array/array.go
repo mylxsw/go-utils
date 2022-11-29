@@ -35,10 +35,10 @@ func BuildMap[T any, M any, K comparable](input []T, mapBuilder func(T) (K, M)) 
 }
 
 // ToMap 将数组转换为 map
-func ToMap[T any, K comparable](input []T, keyFunc func(T) K) map[K]T {
+func ToMap[T any, K comparable](input []T, keyFunc func(T, int) K) map[K]T {
 	m := make(map[K]T)
-	for _, val := range input {
-		m[keyFunc(val)] = val
+	for i, val := range input {
+		m[keyFunc(val, i)] = val
 	}
 
 	return m
@@ -146,28 +146,16 @@ func Difference[T comparable](a, b []T) []T {
 
 // Exclude exclude all items match excepts
 func Exclude[T comparable](items []T, excepts ...T) []T {
-	return Filter(items, func(item T) bool {
+	return Filter(items, func(item T, i int) bool {
 		return !In(item, excepts)
 	})
 }
 
 // Filter 字符串数组过滤
-func Filter[T any](items []T, predicate func(item T) bool) []T {
+func Filter[T any](items []T, predicate func(item T, index int) bool) []T {
 	res := make([]T, 0)
-	for _, item := range items {
-		if predicate(item) {
-			res = append(res, item)
-		}
-	}
-
-	return res
-}
-
-// Filter 字符串数组过滤
-func FilterWithIndex[T any](items []T, filter func(item T, index int) bool) []T {
-	res := make([]T, 0)
-	for index, item := range items {
-		if filter(item, index) {
+	for i, item := range items {
+		if predicate(item, i) {
 			res = append(res, item)
 		}
 	}
@@ -239,14 +227,7 @@ func GroupBy[T any, K comparable](data []T, cb func(item T) K) map[K][]T {
 }
 
 // Each 遍历data，依次执行 cb 函数
-func Each[T any](data []T, cb func(item T)) {
-	for _, dat := range data {
-		cb(dat)
-	}
-}
-
-// EachWithIndex 遍历data，依次执行 cb 函数
-func EachWithIndex[T any](data []T, cb func(item T, index int)) {
+func Each[T any](data []T, cb func(item T, index int)) {
 	for index, dat := range data {
 		cb(dat, index)
 	}
