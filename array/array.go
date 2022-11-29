@@ -164,17 +164,7 @@ func Filter[T any](items []T, predicate func(item T, index int) bool) []T {
 }
 
 // Map 依次对每一个元素做 mapper 操作
-func Map[T any, K any](items []T, mapper func(item T) K) []K {
-	res := make([]K, len(items))
-	for i, item := range items {
-		res[i] = mapper(item)
-	}
-
-	return res
-}
-
-// Map 依次对每一个元素做 mapper 操作
-func MapWithIndex[T any, K any](items []T, mapper func(item T, index int) K) []K {
+func Map[T any, K any](items []T, mapper func(item T, index int) K) []K {
 	res := make([]K, len(items))
 	for i, item := range items {
 		res[i] = mapper(item, i)
@@ -235,14 +225,14 @@ func Each[T any](data []T, cb func(item T, index int)) {
 
 // Sort 对数组进行排序
 func Sort[T any](data []T, cb func(item1 T, item2 T) bool) []T {
-	results := Map(data, func(item T) sortStruct {
+	results := Map(data, func(item T, _ int) sortStruct {
 		return sortStruct{Value: item, Compare: func(v1, v2 any) bool {
 			return cb(v1.(T), v2.(T))
 		}}
 	})
 	sort.Sort(sortStructs(results))
 
-	return Map(results, func(item sortStruct) T { return item.Value.(T) })
+	return Map(results, func(item sortStruct, _ int) T { return item.Value.(T) })
 }
 
 type sortStruct struct {

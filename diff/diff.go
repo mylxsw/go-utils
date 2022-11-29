@@ -97,8 +97,8 @@ func (ds Differ) DiffLatest(name string, targetStr string) Diff {
 			}
 
 			tss := array.Map(
-				array.Filter(files, func(file string) bool { return fileMatchRegexp.MatchString(file) }),
-				func(file string) string {
+				array.Filter(files, func(file string, _ int) bool { return fileMatchRegexp.MatchString(file) }),
+				func(file string, _ int) string {
 					return strings.Split(file, ".")[1]
 				},
 			)
@@ -109,8 +109,8 @@ func (ds Differ) DiffLatest(name string, targetStr string) Diff {
 			}
 
 			array.Each(
-				array.Map(tss[:len(tss)-int(keepOnly)-1], func(ts string) string { return filepath.Join(ds.dataDir, fmt.Sprintf("%s.%s.stat", name, ts)) }),
-				func(targetFile string) {
+				array.Map(tss[:len(tss)-int(keepOnly)-1], func(ts string, _ int) string { return filepath.Join(ds.dataDir, fmt.Sprintf("%s.%s.stat", name, ts)) }),
+				func(targetFile string, _ int) {
 					_ = ds.fs.Delete(targetFile)
 					_ = ds.fs.Delete(targetFile + ".diff")
 				},

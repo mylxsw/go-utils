@@ -112,7 +112,7 @@ func TestMap(t *testing.T) {
 	}
 
 	data := []string{"abc", "def", "oops"}
-	for i, item := range array.Map(data, func(item string) Data { return Data{Value: item} }) {
+	for i, item := range array.Map(data, func(item string, _ int) Data { return Data{Value: item} }) {
 		assert.EqualValues(t, data[i], item.Value)
 	}
 }
