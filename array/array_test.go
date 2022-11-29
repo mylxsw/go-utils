@@ -29,7 +29,7 @@ func TestBuildMap(t *testing.T) {
 		{Key: "lmn", Value: "101"},
 	}
 
-	res := array.BuildMap(data, func(item Data) (string, string) { return item.Key + item.Value, item.Value })
+	res := array.BuildMap(data, func(item Data, i int) (string, string) { return item.Key + item.Value, item.Value })
 	assert.Equal(t, 4, len(res))
 	assert.Equal(t, "123", res["abc123"])
 	assert.Equal(t, "101", res["lmn101"])
