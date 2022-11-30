@@ -197,3 +197,20 @@ func TestShuffle(t *testing.T) {
 
 	assert.EqualValues(t, 10, len(array.Shuffle(data)))
 }
+
+func TestDistinctBy(t *testing.T) {
+	type Data struct {
+		Value    string
+		Category string
+		Items    []string
+	}
+
+	data := []Data{
+		{Value: "abc", Category: "seq"},
+		{Value: "def", Category: "seq"},
+		{Value: "vja", Category: "random"},
+	}
+
+	res := array.DistinctBy(data, func(item Data) string { return item.Category })
+	assert.EqualValues(t, "[{abc seq []} {vja random []}]", fmt.Sprintf("%v", res))
+}

@@ -69,6 +69,11 @@ func Uniq[K comparable](input []K) []K {
 	return Distinct(input)
 }
 
+// UniqBy remove duplicate elements from array, use keyFunc to compare
+func UniqBy[K any, V comparable](input []K, keyFunc func(item K) V) []K {
+	return DistinctBy(input, keyFunc)
+}
+
 // Distinct remove duplicate elements from array
 func Distinct[K comparable](input []K) []K {
 	u := make([]K, 0, len(input))
@@ -77,6 +82,22 @@ func Distinct[K comparable](input []K) []K {
 	for _, val := range input {
 		if _, ok := m[val]; !ok {
 			m[val] = true
+			u = append(u, val)
+		}
+	}
+
+	return u
+}
+
+// DistinctBy remove duplicate elements from array, use keyFunc to compare
+func DistinctBy[K any, V comparable](input []K, keyFunc func(item K) V) []K {
+	u := make([]K, 0, len(input))
+	m := make(map[V]bool)
+
+	for _, val := range input {
+		vv := keyFunc(val)
+		if _, ok := m[vv]; !ok {
+			m[vv] = true
 			u = append(u, val)
 		}
 	}
