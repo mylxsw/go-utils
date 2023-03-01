@@ -40,12 +40,20 @@ func IfElseLazy[T any](condition bool, positiveFunc, negativeFunc func() T) T {
 	return negativeFunc()
 }
 
+func IfLazy2[T any, K any](condition bool, positiveFunc, negativeFunc func() (T, K)) (T, K) {
+	return IfElseLazy2(condition, positiveFunc, negativeFunc)
+}
+
 func IfElseLazy2[T any, K any](condition bool, positiveFunc, negativeFunc func() (T, K)) (T, K) {
 	if condition {
 		return positiveFunc()
 	}
 
 	return negativeFunc()
+}
+
+func IfLazy3[T any, K any, M any](condition bool, positiveFunc, negativeFunc func() (T, K, M)) (T, K, M) {
+	return IfElseLazy3(condition, positiveFunc, negativeFunc)
 }
 
 func IfElseLazy3[T any, K any, M any](condition bool, positiveFunc, negativeFunc func() (T, K, M)) (T, K, M) {
